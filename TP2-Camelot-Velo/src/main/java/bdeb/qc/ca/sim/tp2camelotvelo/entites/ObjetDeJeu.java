@@ -1,5 +1,6 @@
-package bdeb.qc.ca.sim.tp2camelotvelo;
+package bdeb.qc.ca.sim.tp2camelotvelo.entites;
 
+import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Camera;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -8,16 +9,14 @@ public abstract class ObjetDeJeu {
     protected Point2D position;
     protected Point2D velocite;
     protected Point2D acceleration;
-    protected double largeur;
-    protected double hauteur;
+   protected Point2D taille;
 
     //Constructeurs
     public ObjetDeJeu(Point2D position, double largeur, double hauteur) {
         this.position = position;
         this.velocite = new Point2D(0, 0);
         this.acceleration = new Point2D(0, 0);
-        this.largeur = largeur;
-        this.hauteur = hauteur;
+        this.taille =new Point2D(largeur,hauteur);
     }
 
 
@@ -30,7 +29,7 @@ public abstract class ObjetDeJeu {
 
     public abstract void update(double deltaTemps);
 
-    public abstract void dessiner(GraphicsContext context, Camera camera);
+    public abstract void draw(GraphicsContext context, Camera camera);
 
     //Getters et Setters
     public double getHaut(){
@@ -38,7 +37,11 @@ public abstract class ObjetDeJeu {
     }
 
     public double getBas(){
-        return position.getY() + hauteur;
+        return position.getY() + taille.getY();
+    }
+
+    public Point2D getCentre(){
+        return position.add(taille.multiply(1/2.0));
     }
 
     public double getGauche(){
@@ -46,15 +49,15 @@ public abstract class ObjetDeJeu {
     }
 
     public double getDroite(){
-        return position.getX() + largeur;
+        return position.getX() + taille.getX();
     }
 
     public double getHauteur() {
-        return hauteur;
+        return taille.getY();
     }
 
     public double getLargeur() {
-        return largeur;
+        return taille.getX();
     }
 
     public void setVelocite(Point2D velocite) {
@@ -73,7 +76,5 @@ public abstract class ObjetDeJeu {
         this.position = position;
     }
 
-    public Point2D getCentre(){
-        return position.add(largeur/2, hauteur/2);
-    }
+
 }
