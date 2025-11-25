@@ -19,6 +19,7 @@ public class Camelot extends ObjetDeJeu {
     private double tempEcouleLance = 0;
     private boolean estAuSol;
     private final ArrayList<Journal> journauxLances = new ArrayList<>();
+    private int journauxRestants = 0; // Nombre de journaux restants dans l'inventaire
 
     public Camelot(Point2D positionDepart) {
         super(positionDepart, 172, 144);
@@ -31,7 +32,7 @@ public class Camelot extends ObjetDeJeu {
         }
 
 
-        this.acceleration = new Point2D(0, 15000);
+        this.acceleration = new Point2D(0, 1500);
 
         this.velocite = new Point2D(400, 0);
 
@@ -67,7 +68,7 @@ public class Camelot extends ObjetDeJeu {
             if (vx < 400) {
                 accX = 300;
             } else if (vx > 400) {
-                accX = 300;
+                accX = -300;
             }
 
         }
@@ -110,8 +111,85 @@ public class Camelot extends ObjetDeJeu {
         }
 
         this.velocite = new Point2D(nouveauVx, velocite.getY());
+
+        // Gestion du lancer de journal
+        boolean estShift = Input.isKeyPressed(KeyCode.SHIFT);
+        Journal journalLance = null;
+
+        if (Input.isKeyPressed(KeyCode.Z)) {
+            // Lancer vers le haut
+            journalLance = lancerJournal(true, estShift);
+        } else if (Input.isKeyPressed(KeyCode.X)) {
+            // Lancer vers l'avant
+            journalLance = lancerJournal(false, estShift);
+        }
+
+        // Si un journal a été lancé, l'ajouter à la liste
+        if (journalLance != null) {
+            journauxLances.add(journalLance);
+        }
     }
 
+
+    /**
+     * Définit le nombre de journaux restants dans l'inventaire
+     * @param journauxRestants nombre de journaux restants
+     */
+    public void setJournauxRestants(int journauxRestants) {
+        this.journauxRestants = journauxRestants;
+    }
+
+    /**
+     * Retourne le nombre de journaux restants dans l'inventaire
+     * @return nombre de journaux restants
+     */
+    public int getJournauxRestants() {
+        return journauxRestants;
+    }
+
+    /**
+     * Retourne la liste des journaux lancés
+     * @return ArrayList des journaux lancés
+     */
+    public ArrayList<Journal> getJournauxLances() {
+        return journauxLances;
+    }
+
+    /**
+     * Lance un journal si possible
+     * @param estZ true si c'est un lancer vers le haut (Z), false si vers l'avant (X)
+     * @param estShift true si Shift est enfoncé (lancer plus fort)
+     * @return le Journal lancé, ou null si le lancement n'est pas possible
+     */
+    public Journal lancerJournal(boolean estZ, boolean estShift) {
+        // Vérifier le cooldown
+        if (tempEcouleLance > 0) {
+            return null;
+        }
+
+        // Vérifier s'il reste des journaux
+        if (journauxRestants <= 0) {
+            return null;
+        }
+
+        // Position au centre du camelot
+        Point2D positionCentre = new Point2D(
+                position.getX() + taille.getX() / 2 - 26, // 26 = moitié de la largeur du journal
+                position.getY() + taille.getY() / 2 - 15.5 // 15.5 = moitié de la hauteur du journal
+        );
+
+        // Créer et lancer le journal
+        Journal journal = new Journal(positionCentre);
+        journal.lancerDepuisCamelot(position, velocite, estZ, estShift);
+
+        // Définir le cooldown
+        tempEcouleLance = 0.5; // 0.5 seconde de cooldown
+
+        // Décrémenter le nombre de journaux restants
+        journauxRestants--;
+
+        return journal;
+    }
 
     @Override
     public void draw(GraphicsContext gc, Camera camera) {
