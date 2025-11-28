@@ -74,10 +74,10 @@ public class Partie {
         this.adressesAbonnees = new ArrayList<>();
         this.modeDebogageAffichage = false;
         this.modeVisualisationChamp = false;
-        this.imageBrique = new Image("file:assets/brique.png");
-        this.iconeJournalHUD = new Image("file:assets/icone-journal.png");
-        this.iconeArgent = new Image("file:assets/icone-dollar.png");
-        this.iconeMaison = new Image("file:assets/icone-maison.png");
+        this.imageBrique = new Image("file:ressources/brique.png");
+        this.iconeJournalHUD = new Image("file:ressources/icone-journal.png");
+        this.iconeArgent = new Image("file:ressources/icone-dollar.png");
+        this.iconeMaison = new Image("file:ressources/icone-maison.png");
         chargerImages();
         demarrerNiveau(1);
     }
