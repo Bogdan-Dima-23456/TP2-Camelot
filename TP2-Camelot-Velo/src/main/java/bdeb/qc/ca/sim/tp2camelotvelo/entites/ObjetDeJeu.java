@@ -60,6 +60,31 @@ public abstract class ObjetDeJeu {
         return taille.getX();
     }
 
+    public boolean verifierCollision(ObjetDeJeu autre) {
+
+        if (this.getDroite() < autre.getGauche()) {
+            return false;
+        }
+
+
+        if (this.getGauche() > autre.getDroite()) {
+            return false;
+        }
+
+
+        if (this.getBas() < autre.getHaut()) {
+            return false;
+        }
+
+
+        if (this.getHaut() > autre.getBas()) {
+            return false;
+        }
+
+
+        return true;
+    }
+
     public void setVelocite(Point2D velocite) {
         this.velocite = velocite;
     }

@@ -16,7 +16,7 @@ public class Journal extends ObjetDeJeu {
 
     public Journal(Point2D position) {
         super(position, 52, 31); // Dimensions: 52x31 px
-        this.masse = 1.0 + Math.random(); // Entre 1 et 2 kg
+       // this.masse = 1.0 + Math.random(); // Entre 1 et 2 kg
 
         // Chargement de l'image
         try {
@@ -26,13 +26,7 @@ public class Journal extends ObjetDeJeu {
         }
     }
 
-    /**
-     * Lance le journal depuis le camelot avec une impulsion
-     * @param posCamelot Position du camelot
-     * @param velCamelot Vélocité du camelot
-     * @param estZ true si lancer vers le haut (Z), false si vers l'avant (X)
-     * @param estShift true si Shift enfoncé (lancer plus fort)
-     */
+
     public void lancerDepuisCamelot(Point2D posCamelot, Point2D velCamelot, boolean estZ, boolean estShift) {
         // Quantité de mouvement initiale selon la touche
         Point2D quantiteMouvement;
@@ -57,9 +51,7 @@ public class Journal extends ObjetDeJeu {
         limiterVitesse();
     }
 
-    /**
-     * Limite la vitesse du journal à 1500 px/s maximum
-     */
+
     private void limiterVitesse() {
         double magnitude = velocite.magnitude();
         if (magnitude > VITESSE_MAX) {

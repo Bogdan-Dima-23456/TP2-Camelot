@@ -25,8 +25,8 @@ public class Camelot extends ObjetDeJeu {
         super(positionDepart, 172, 144);
 
         try {
-            image1 = new Image("camelot1.png");
-            image2 = new Image("camelot2.png");
+            image1 = new Image("file:resources/camelot1.png");
+            image2 = new Image("file:resources/camelot2.png");
         } catch (Exception e) {
             System.out.println("Images du camelot introuvables");
         }
@@ -131,36 +131,22 @@ public class Camelot extends ObjetDeJeu {
     }
 
 
-    /**
-     * Définit le nombre de journaux restants dans l'inventaire
-     * @param journauxRestants nombre de journaux restants
-     */
+
     public void setJournauxRestants(int journauxRestants) {
         this.journauxRestants = journauxRestants;
     }
 
-    /**
-     * Retourne le nombre de journaux restants dans l'inventaire
-     * @return nombre de journaux restants
-     */
+
     public int getJournauxRestants() {
         return journauxRestants;
     }
 
-    /**
-     * Retourne la liste des journaux lancés
-     * @return ArrayList des journaux lancés
-     */
+
     public ArrayList<Journal> getJournauxLances() {
         return journauxLances;
     }
 
-    /**
-     * Lance un journal si possible
-     * @param estZ true si c'est un lancer vers le haut (Z), false si vers l'avant (X)
-     * @param estShift true si Shift est enfoncé (lancer plus fort)
-     * @return le Journal lancé, ou null si le lancement n'est pas possible
-     */
+
     public Journal lancerJournal(boolean estZ, boolean estShift) {
         // Vérifier le cooldown
         if (tempEcouleLance > 0) {
