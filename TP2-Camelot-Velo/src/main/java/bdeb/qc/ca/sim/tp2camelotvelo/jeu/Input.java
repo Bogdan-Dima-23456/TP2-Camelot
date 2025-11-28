@@ -21,4 +21,8 @@ public class Input {
         else{
             touches.remove(code);}
     }
+
+    public static Set<KeyCode> getTouches(){
+        return new HashSet<>(touches);
+    }
 }
