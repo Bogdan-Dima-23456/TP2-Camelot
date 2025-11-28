@@ -22,6 +22,8 @@ public class ParticuleChargee extends ObjetDeJeu {
         super(position, RAYON * 2, RAYON * 2);
         
         // couleur random vive (HSB, teinte 0-360)
+        double teinte = Math.random() * 360; // Angle entre 0 et 360 degrés
+        this.couleur = Color.hsb(teinte, 1.0, 1.0);
     }
 
     @Override
@@ -32,7 +34,11 @@ public class ParticuleChargee extends ObjetDeJeu {
     @Override
     public void draw(GraphicsContext gc, Camera camera) {
         // convertir pos monde -> écran
+        Point2D posEcran = camera.coordoEcran(position);
+        
         // dessiner cercle rempli couleur, taille = rayon*2
+        gc.setFill(couleur);
+        gc.fillOval(posEcran.getX(), posEcran.getY(), RAYON * 2, RAYON * 2);
     }
 
     // Getter pour récupérer la charge
