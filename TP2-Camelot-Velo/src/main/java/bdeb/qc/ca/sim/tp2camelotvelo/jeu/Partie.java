@@ -343,13 +343,9 @@ public class Partie {
                 BoiteAuxLettres boite = maison.getBoiteAuxLettres();
                 if (boite != null && journal.verifierCollision(boite)) {
                     collisionDetectee = true;
+                    boite.marquerTouchee(); // Marquer la boîte comme touchée
                     if (maison.isEstAbonnee()) {
                         argentTotal += 1;
-                        // Marquer boîte touchée (vert)
-                        // Note: BoiteAuxLettres n'a pas de méthode pour changer couleur, 
-                        // mais on peut ajouter un état si nécessaire
-                    } else {
-                        // Rouge (pas d'argent)
                     }
                     break;
                 }

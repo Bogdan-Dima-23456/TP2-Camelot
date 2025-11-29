@@ -16,7 +16,7 @@ public class Journal extends ObjetDeJeu {
 
     public Journal(Point2D position) {
         super(position, 52, 31); // Dimensions: 52x31 px
-       // this.masse = 1.0 + Math.random(); // Entre 1 et 2 kg
+        this.masse = 1.0 + Math.random(); // Entre 1 et 2 kg
 
         // Chargement de l'image
         try {
