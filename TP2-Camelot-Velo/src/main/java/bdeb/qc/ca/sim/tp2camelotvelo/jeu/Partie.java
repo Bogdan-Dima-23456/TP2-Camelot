@@ -17,7 +17,7 @@ public class Partie {
     // Constantes du jeu
     private static final int HAUTEUR_SOL = 580; // Position Y du sol
     public static final double GRAVITE = 1500.0; // Accélération de la gravité en px/s²
-    private static final double TAILLE_BRIQUE = 64.0; // Taille d'une brique en pixels
+    // Supprimer: private static final double TAILLE_BRIQUE = 64.0; // Taille d'une brique en pixels
 
     // Dimensions de l'écran
     private final double largeurEcran;
@@ -288,19 +288,19 @@ public class Partie {
     // Dessine l'arrière-plan avec des briques
     private void dessinerArrierePlan(GraphicsContext gc) {
         if (imageBrique == null) return;
-        
-        // Calculer position départ selon caméra
+
+        double largeurBrique = 192;
+        double hauteurBrique = 96;
+
+        // Calculer la position de départ en fonction de la caméra
         double cameraX = camera.getX();
-        double startX = Math.floor(cameraX / TAILLE_BRIQUE) * TAILLE_BRIQUE;
-        double endX = cameraX + largeurEcran + TAILLE_BRIQUE;
-        
-        // Dessiner briques visibles
-        for (double x = startX; x < endX; x += TAILLE_BRIQUE) {
-            for (double y = 0; y < hauteurEcran; y += TAILLE_BRIQUE) {
+        double debutX = Math.floor(cameraX / largeurBrique) * largeurBrique;
+
+        // Dessiner les briques visibles à l'écran
+        for (double x = debutX; x < cameraX + largeurEcran; x += largeurBrique) {
+            for (double y = 0; y < hauteurEcran; y += hauteurBrique) {
                 Point2D posEcran = camera.coordoEcran(new Point2D(x, y));
-                if (posEcran.getX() >= -TAILLE_BRIQUE && posEcran.getX() < largeurEcran) {
-                    gc.drawImage(imageBrique, posEcran.getX(), posEcran.getY(), TAILLE_BRIQUE, TAILLE_BRIQUE);
-                }
+                gc.drawImage(imageBrique, posEcran.getX(), posEcran.getY());
             }
         }
     }
