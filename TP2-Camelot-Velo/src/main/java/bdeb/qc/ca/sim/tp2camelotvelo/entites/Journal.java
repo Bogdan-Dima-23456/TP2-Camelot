@@ -16,11 +16,13 @@ public class Journal extends ObjetDeJeu {
     private Image imageJournal;
     private double masse; // Masse en kg (entre 1 et 2)
     private Partie partie;
+    private boolean estDansBoiteAuxLettres; // Indique si le journal est dans une boîte aux lettres
 
     public Journal(Point2D position, double masse, Partie partie) {
         super(position, 52, 31); // Dimensions: 52x31 px
         this.masse = masse;
         this.partie = partie;
+        this.estDansBoiteAuxLettres = false;
 
         // Chargement de l'image
         try {
@@ -65,6 +67,11 @@ public class Journal extends ObjetDeJeu {
 
     @Override
     public void update(double deltaTemps) {
+        // Si le journal est dans une boîte aux lettres, ne pas le mettre à jour
+        if (estDansBoiteAuxLettres) {
+            return;
+        }
+
         // Accélération due à la gravité
         Point2D accelerationGravite = new Point2D(0, GRAVITE);
 
@@ -109,5 +116,13 @@ public class Journal extends ObjetDeJeu {
         // Conversion position monde vers écran
         Point2D posEcran = camera.coordoEcran(position);
         gc.drawImage(imageJournal, posEcran.getX(), posEcran.getY(), taille.getX(), taille.getY());
+    }
+
+    public void setEstDansBoiteAuxLettres(boolean estDansBoiteAuxLettres) {
+        this.estDansBoiteAuxLettres = estDansBoiteAuxLettres;
+    }
+
+    public boolean estDansBoiteAuxLettres() {
+        return estDansBoiteAuxLettres;
     }
 }

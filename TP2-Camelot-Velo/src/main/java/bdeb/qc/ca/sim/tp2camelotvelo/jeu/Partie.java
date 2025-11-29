@@ -65,7 +65,7 @@ public class Partie {
         this.tempsChargement = 3.0;
         this.tempsTotal = 0.0;
         this.camera = new Camera();
-        this.camelot = new Camelot(new Point2D(largeurEcran / 2, hauteurEcran - 144), this);
+        this.camelot = new Camelot(new Point2D(100, hauteurEcran - 144), this);
         this.journaux = new ArrayList<>();
         this.maisons = new ArrayList<>();
         this.particules = new ArrayList<>();
@@ -97,8 +97,10 @@ public class Partie {
         this.camelot.setJournauxRestants(this.journauxRestants);
         genererNiveau(numeroNiveau);
         // Reset camelot position
-        this.camelot.setPosition(new Point2D(largeurEcran / 2, hauteurEcran - 144));
+        this.camelot.setPosition(new Point2D(100, hauteurEcran - 144));
         this.camelot.setVelocite(new Point2D(400, 0));
+        // Initialiser la caméra pour suivre le camelot dès le début
+        camera.update(camelot.getPosition().getX(), largeurEcran);
     }
 
     // Génère un nouveau niveau avec 12 maisons
@@ -112,16 +114,16 @@ public class Partie {
         // Masse constante pour ce niveau (entre 1 et 2 kg)
         this.masseNiveau = 1.0 + Math.random();
 
-        // Première adresse random 100-950
+        // Génération des adresses (première maison entre 100 et 950)
         int premiereAdresse = 100 + (int)(Math.random() * 851);
         
-        // 12 maisons adresses consécutives, espacées régulièrement
-        double espacement = 800.0; // Espacement entre les maisons
-        double positionXDepart = premiereAdresse;
+        // Création de 12 maisons
+        // Position X fixe à 1300 pour la première maison (comme TP2_TEST)
+        double espacement = 1300.0; // Espacement entre les maisons (comme TP2_TEST)
         
         for (int i = 0; i < 12; i++) {
             int adresse = premiereAdresse + (i * 2);
-            double positionX = positionXDepart + i * espacement;
+            double positionX = 1300 + (i * espacement); // 1300, 2600, 3900, ... 15600
             
             // Random 50% abonnées
             boolean estAbonnee = Math.random() < 0.5;
@@ -134,7 +136,7 @@ public class Partie {
         }
         
         // Calculer la fin du niveau (après la dernière maison)
-        this.finNiveauX = positionXDepart + 12 * espacement;
+        this.finNiveauX = 1300 + 12 * espacement; // 1300 + 12 * 1300 = 16900
         
         // Particules niveau 2+ (30/niveau, max 400)
         if (numeroNiveau >= 2) {
@@ -179,22 +181,18 @@ public class Partie {
         camelot.update(dt);
         camelot.setJournauxRestants(journauxRestants);
         
-        // Récupérer les journaux lancés par le camelot
-        List<Journal> journauxLances = camelot.getJournauxLances();
-        for (Journal journal : journauxLances) {
-            if (!journaux.contains(journal)) {
-                journaux.add(journal);
-            }
-        }
-        
         // Update journaux
         for (Journal journal : journaux) {
             journal.update(dt);
         }
         
-        // Supprimer journaux hors écran
+        // Supprimer journaux hors écran (sauf ceux dans les boîtes aux lettres)
         for (int i = journaux.size() - 1; i >= 0; i--) {
             Journal journal = journaux.get(i);
+            // Ne pas supprimer les journaux qui sont dans une boîte aux lettres
+            if (journal.estDansBoiteAuxLettres()) {
+                continue;
+            }
             Point2D posEcran = camera.coordoEcran(journal.getPosition());
             if (posEcran.getX() < -100 || posEcran.getX() > largeurEcran + 100 ||
                 posEcran.getY() > hauteurEcran + 100) {
@@ -356,22 +354,24 @@ public class Partie {
         for (int i = journaux.size() - 1; i >= 0; i--) {
             Journal journal = journaux.get(i);
             boolean collisionDetectee = false;
+            boolean collisionBoiteAuxLettres = false;
             
             // Collision avec boîtes aux lettres
             for (Maison maison : maisons) {
                 BoiteAuxLettres boite = maison.getBoiteAuxLettres();
-                if (boite != null && journal.verifierCollision(boite)) {
-                    collisionDetectee = true;
+                if (boite != null && !boite.estTouchee() && journal.verifierCollision(boite)) {
+                    collisionBoiteAuxLettres = true;
                     boite.marquerTouchee(); // Marquer la boîte comme touchée
-                    if (maison.isEstAbonnee()) {
-                        argentTotal += 1;
-                    }
+                    argentTotal += 2; // Toujours donner 2$ quand un journal touche une boîte aux lettres
+                    // Arrêter le mouvement du journal (il reste dans la boîte)
+                    journal.setVelocite(new Point2D(0, 0));
+                    journal.setEstDansBoiteAuxLettres(true); // Marquer le journal comme étant dans la boîte
                     break;
                 }
             }
             
-            // Collision avec fenêtres
-            if (!collisionDetectee) {
+            // Collision avec fenêtres (seulement si pas de collision avec boîte aux lettres)
+            if (!collisionBoiteAuxLettres) {
                 for (Maison maison : maisons) {
                     for (Fenetre fenetre : maison.getFenetres()) {
                         if (!fenetre.isEstCassee() && journal.verifierCollision(fenetre)) {
@@ -391,7 +391,7 @@ public class Partie {
                 }
             }
             
-            // Supprimer journal après collision
+            // Supprimer journal seulement après collision avec fenêtre (pas avec boîte aux lettres)
             if (collisionDetectee) {
                 journaux.remove(i);
             }

@@ -156,8 +156,8 @@ public class Camelot extends ObjetDeJeu {
             return null;
         }
 
-        // Vérifier s'il reste des journaux
-        if (journauxRestants <= 0) {
+        // Vérifier s'il reste des journaux (vérifier depuis Partie, pas depuis la variable locale)
+        if (partie.getJournauxRestants() <= 0) {
             return null;
         }
 
@@ -174,11 +174,11 @@ public class Camelot extends ObjetDeJeu {
         Journal journal = new Journal(positionCentre, masse, partie);
         journal.lancerDepuisCamelot(position, velocite, estZ, estShift);
 
+        // Ajouter le journal à la partie (cela décrémente automatiquement journauxRestants)
+        partie.ajouterJournal(journal);
+
         // Définir le cooldown
         tempEcouleLance = 0.5; // 0.5 seconde de cooldown
-
-        // Décrémenter le nombre de journaux restants
-        journauxRestants--;
 
         return journal;
     }

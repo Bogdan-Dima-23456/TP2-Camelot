@@ -58,4 +58,8 @@ public class BoiteAuxLettres extends ObjetDeJeu{
     public boolean isEstAbonnee() {
         return estAbonnee;
     }
+
+    public boolean estTouchee() {
+        return estTouchee;
+    }
 }
