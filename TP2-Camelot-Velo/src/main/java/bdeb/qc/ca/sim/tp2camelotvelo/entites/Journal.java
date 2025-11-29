@@ -1,6 +1,7 @@
 package bdeb.qc.ca.sim.tp2camelotvelo.entites;
 
 import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Camera;
+import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Partie;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -9,14 +10,17 @@ public class Journal extends ObjetDeJeu {
     // Constantes
     private static final double GRAVITE = 1500.0; // px/s²
     private static final double VITESSE_MAX = 1500.0; // px/s
+    private static final double CHARGE_JOURNAL = 900.0; // Charge électrique en Coulombs
 
     // Attributs
     private Image imageJournal;
     private double masse; // Masse en kg (entre 1 et 2)
+    private Partie partie;
 
-    public Journal(Point2D position) {
+    public Journal(Point2D position, double masse, Partie partie) {
         super(position, 52, 31); // Dimensions: 52x31 px
-        this.masse = 1.0 + Math.random(); // Entre 1 et 2 kg
+        this.masse = masse;
+        this.partie = partie;
 
         // Chargement de l'image
         try {
@@ -62,10 +66,40 @@ public class Journal extends ObjetDeJeu {
     @Override
     public void update(double deltaTemps) {
         // Accélération due à la gravité
-        this.acceleration = new Point2D(0, GRAVITE);
+        Point2D accelerationGravite = new Point2D(0, GRAVITE);
 
-        // Mise à jour de la physique
-        super.updatePhysique(deltaTemps);
+        // Accélération totale commence avec la gravité
+        Point2D accelerationTotale = accelerationGravite;
+
+        // Si on est au niveau 2 ou plus, ajouter les forces électriques
+        if (partie != null && partie.getNiveauActuel() >= 2) {
+            // Position au centre du journal
+            Point2D positionCentre = new Point2D(
+                    position.getX() + taille.getX() / 2,
+                    position.getY() + taille.getY() / 2
+            );
+
+            // Calculer le champ électrique à cette position
+            Point2D champElectrique = partie.champElectrique(positionCentre);
+
+            // Force électrique: F = E * q
+            Point2D forceElectrique = champElectrique.multiply(CHARGE_JOURNAL);
+
+            // Accélération électrique: a = F / m
+            Point2D accelerationElectrique = forceElectrique.multiply(1.0 / masse);
+
+            // Ajouter l'accélération électrique
+            accelerationTotale = accelerationTotale.add(accelerationElectrique);
+        }
+
+        // Mise à jour de la vélocité
+        velocite = velocite.add(accelerationTotale.multiply(deltaTemps));
+
+        // Limiter la vitesse max à 1500 px/s
+        limiterVitesse();
+
+        // Mise à jour de la position
+        position = position.add(velocite.multiply(deltaTemps));
     }
 
     @Override

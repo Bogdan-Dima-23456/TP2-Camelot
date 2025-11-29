@@ -3,6 +3,7 @@ package bdeb.qc.ca.sim.tp2camelotvelo.entites;
 import bdeb.qc.ca.sim.tp2camelotvelo.Main;
 import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Camera;
 import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Input;
+import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Partie;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -20,9 +21,11 @@ public class Camelot extends ObjetDeJeu {
     private boolean estAuSol;
     private final ArrayList<Journal> journauxLances = new ArrayList<>();
     private int journauxRestants = 0; // Nombre de journaux restants dans l'inventaire
+    private Partie partie;
 
-    public Camelot(Point2D positionDepart) {
+    public Camelot(Point2D positionDepart, Partie partie) {
         super(positionDepart, 172, 144);
+        this.partie = partie;
 
         try {
             image1 = new Image("file:assets/camelot1.png");
@@ -164,8 +167,11 @@ public class Camelot extends ObjetDeJeu {
                 position.getY() + taille.getY() / 2 - 15.5 // 15.5 = moitié de la hauteur du journal
         );
 
+        // Obtenir la masse du niveau depuis Partie
+        double masse = partie.getMasseNiveau();
+
         // Créer et lancer le journal
-        Journal journal = new Journal(positionCentre);
+        Journal journal = new Journal(positionCentre, masse, partie);
         journal.lancerDepuisCamelot(position, velocite, estZ, estShift);
 
         // Définir le cooldown

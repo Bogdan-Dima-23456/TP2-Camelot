@@ -10,7 +10,6 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 // Classe principale contenant toute la logique du jeu
 public class Partie {
@@ -32,6 +31,7 @@ public class Partie {
     private double tempsChargement; // Timer pour l'écran de chargement (3 secondes)
     private double tempsTotal; // Temps total écoulé depuis le début du jeu
     private double finNiveauX; // Position X de fin du niveau
+    private double masseNiveau; // Masse constante pour tous les journaux du niveau (entre 1 et 2 kg)
 
     // Caméra
     private Camera camera;
@@ -59,13 +59,13 @@ public class Partie {
         this.hauteurEcran = hauteurEcran;
         this.niveauActuel = 1;
         this.argentTotal = 0;
-        this.journauxRestants = 12;
+        this.journauxRestants = 0;
         this.enChargement = true;
         this.partieTerminee = false;
         this.tempsChargement = 3.0;
         this.tempsTotal = 0.0;
         this.camera = new Camera();
-        this.camelot = new Camelot(new Point2D(largeurEcran / 2, hauteurEcran - 144));
+        this.camelot = new Camelot(new Point2D(largeurEcran / 2, hauteurEcran - 144), this);
         this.journaux = new ArrayList<>();
         this.maisons = new ArrayList<>();
         this.particules = new ArrayList<>();
@@ -109,6 +109,9 @@ public class Partie {
         this.adressesAbonnees.clear();
         this.journaux.clear();
 
+        // Masse constante pour ce niveau (entre 1 et 2 kg)
+        this.masseNiveau = 1.0 + Math.random();
+
         // Première adresse random 100-950
         int premiereAdresse = 100 + (int)(Math.random() * 851);
         
@@ -117,7 +120,7 @@ public class Partie {
         double positionXDepart = premiereAdresse;
         
         for (int i = 0; i < 12; i++) {
-            int adresse = premiereAdresse + i;
+            int adresse = premiereAdresse + (i * 2);
             double positionX = positionXDepart + i * espacement;
             
             // Random 50% abonnées
@@ -165,7 +168,7 @@ public class Partie {
                 // Restart niveau 1
                 this.niveauActuel = 1;
                 this.argentTotal = 0;
-                this.journauxRestants = 12;
+                this.journauxRestants = 0;
                 this.partieTerminee = false;
                 demarrerNiveau(1);
             }
@@ -184,17 +187,8 @@ public class Partie {
             }
         }
         
-        // Update journaux avec champ électrique
+        // Update journaux
         for (Journal journal : journaux) {
-            // Appliquer le champ électrique si niveau 2+
-            if (niveauActuel >= 2 && !particules.isEmpty()) {
-                Point2D champ = ParticuleChargee.champElectrique(particules, journal.getPosition());
-                // F = q*E, mais ici on applique directement comme accélération
-                // Pour simplifier, on applique le champ comme force
-                double masse = 1.5; // Masse moyenne du journal
-                Point2D force = champ.multiply(900.0 / masse); // Charge du journal / masse
-                journal.setVelocite(journal.getVelocite().add(force.multiply(dt)));
-            }
             journal.update(dt);
         }
         
@@ -422,11 +416,10 @@ public class Partie {
 
     // Dessine les éléments de débogage (rectangles de collision, ligne 20%)
     private void dessinerDebogageAffichage(GraphicsContext gc) {
-        // Ligne 20% écran
+        // Ligne verticale à 20% de l'écran
         gc.setStroke(Color.YELLOW);
         gc.setLineWidth(2);
-        double ligneY = hauteurEcran * 0.2;
-        gc.strokeLine(0, ligneY, largeurEcran, ligneY);
+        gc.strokeLine(largeurEcran * 0.20, 0, largeurEcran * 0.20, hauteurEcran);
         
         // Rectangles collision journaux
         gc.setStroke(Color.BLUE);
@@ -528,5 +521,23 @@ public class Partie {
 
     public double getTempsTotal() {
         return tempsTotal;
+    }
+
+    public double getMasseNiveau() {
+        return masseNiveau;
+    }
+
+    // Calcule le champ électrique total à une position donnée
+    public Point2D champElectrique(Point2D position) {
+        Point2D champTotal = Point2D.ZERO;
+
+        for (ParticuleChargee p : particules) {
+            Point2D direction = position.subtract(p.getPosition());
+            double distance = Math.max(direction.magnitude(), 1); // Minimum 1px
+            double E = 90 * 900 / (distance * distance); // K * q / r²
+            champTotal = champTotal.add(direction.normalize().multiply(E));
+        }
+
+        return champTotal;
     }
 }
