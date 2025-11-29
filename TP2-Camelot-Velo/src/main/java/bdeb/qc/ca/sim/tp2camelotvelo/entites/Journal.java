@@ -20,7 +20,7 @@ public class Journal extends ObjetDeJeu {
 
         // Chargement de l'image
         try {
-            imageJournal = new Image("journal.png");
+            imageJournal = new Image("file:assets/journal.png");
         } catch (Exception e) {
             System.out.println("Image du journal introuvable: " + e.getMessage());
         }

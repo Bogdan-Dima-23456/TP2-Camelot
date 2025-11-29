@@ -25,8 +25,8 @@ public class Camelot extends ObjetDeJeu {
         super(positionDepart, 172, 144);
 
         try {
-            image1 = new Image("file:resources/camelot1.png");
-            image2 = new Image("file:resources/camelot2.png");
+            image1 = new Image("file:assets/camelot1.png");
+            image2 = new Image("file:assets/camelot2.png");
         } catch (Exception e) {
             System.out.println("Images du camelot introuvables");
         }

@@ -79,10 +79,10 @@ public class Partie {
     // Charge les images nécessaires au jeu
     private void chargerImages() {
         try {
-            this.imageBrique = new Image("file:resources/brique.png");
-            this.iconeJournalHUD = new Image("file:resources/icone-journal.png");
-            this.iconeArgent = new Image("file:resources/icone-dollar.png");
-            this.iconeMaison = new Image("file:resources/icone-maison.png");
+            this.imageBrique = new Image("file:assets/brique.png");
+            this.iconeJournalHUD = new Image("file:assets/icone-journal.png");
+            this.iconeArgent = new Image("file:assets/icone-dollar.png");
+            this.iconeMaison = new Image("file:assets/icone-maison.png");
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement des images: " + e.getMessage());
         }

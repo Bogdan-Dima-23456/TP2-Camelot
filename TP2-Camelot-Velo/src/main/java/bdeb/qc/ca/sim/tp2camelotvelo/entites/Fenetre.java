@@ -23,9 +23,9 @@ public class Fenetre extends ObjetDeJeu{
 
         //chargement des images
         try {
-            imageDeBase = new Image("file:ressources/fenetre.png");
-            imageBriseeRouge = new Image("file:ressources/fenetre-brisee-rouge.png");
-            imageBriseeVerte = new Image("file:ressources/fenetre-brisee-vert.png");
+            imageDeBase = new Image("file:assets/fenetre.png");
+            imageBriseeRouge = new Image("file:assets/fenetre-brisee-rouge.png");
+            imageBriseeVerte = new Image("file:assets/fenetre-brisee-vert.png");
             imageActuelle = imageDeBase;
 
         }catch (Exception e){

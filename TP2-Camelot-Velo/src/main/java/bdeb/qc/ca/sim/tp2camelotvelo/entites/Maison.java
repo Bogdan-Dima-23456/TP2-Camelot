@@ -30,7 +30,7 @@ public class Maison {
 
         //Chargement de l'image de la porte
         try{
-            imagePote = new Image("file:resources/porte.png");
+            imagePote = new Image("file:assets/porte.png");
 
         } catch (Exception e){
             System.out.println("Erreur lors du chargement de l'image de la porte");

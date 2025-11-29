@@ -22,6 +22,7 @@ public class Main extends Application {
     public static final int HAUTEUR = 580;
     private Partie partie;
     private long dernierTemps;
+    private Image image;
 
     @Override
     public void start(Stage stage) {
@@ -62,6 +63,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
 
 
         dernierTemps = System.nanoTime();
