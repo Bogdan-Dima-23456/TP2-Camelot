@@ -307,29 +307,54 @@ public class Partie {
 
     // Dessine le HUD (interface utilisateur)
     private void dessinerHUD(GraphicsContext gc) {
-        // Fond semi-transparent
-        gc.setFill(new Color(0, 0, 0, 0.5));
-        gc.fillRect(0, 0, largeurEcran, 60);
-        
-        // Gauche: icône + journaux restants
-        if (iconeJournalHUD != null) {
-            gc.drawImage(iconeJournalHUD, 10, 10, 40, 40);
-        }
+        // Fond semi-transparent noir (plus joli que le noir pur)
+        gc.setFill(Color.rgb(0, 0, 0, 0.8));
+        gc.fillRect(0, 0, largeurEcran, 50); // Un peu plus haut (50px) pour les icônes
+
         gc.setFill(Color.WHITE);
-        gc.setFont(new Font("Arial", 24));
-        gc.fillText(String.valueOf(journauxRestants), 60, 40);
-        
-        // Milieu: icône + argent total
+        gc.setFont(new Font(20)); // Police un peu plus grande
+
+        // --- SECTION JOURNAUX (Gauche) ---
+        double x = 20; // Marge gauche
+
+        // Dessiner l'icône du journal (si elle est chargée)
+        if (iconeJournalHUD != null) {
+            // On dessine l'image en taille 32x32 environ
+            gc.drawImage(iconeJournalHUD, x, 10, 32, 32);
+            x += 40; // Décalage après l'image
+        }
+        // Le nombre de journaux
+        gc.fillText("" + journauxRestants, x, 33);
+
+        // --- SECTION ARGENT (Milieu-Gauche) ---
+        x += 80; // Espace entre les sections
+
+        // Dessiner l'icône d'argent
         if (iconeArgent != null) {
-            gc.drawImage(iconeArgent, largeurEcran / 2 - 60, 10, 40, 40);
+            gc.drawImage(iconeArgent, x, 10, 32, 32);
+            x += 40;
         }
-        gc.fillText("$" + argentTotal, largeurEcran / 2 - 10, 40);
-        
-        // Droite: icône + adresses abonnées
+        // Le montant
+        gc.fillText(argentTotal + " $", x, 33);
+
+        // --- SECTION MAISONS (Milieu-Droit) ---
+        x += 100; // Espace
+
+        // Dessiner l'icône de maison
         if (iconeMaison != null) {
-            gc.drawImage(iconeMaison, largeurEcran - 150, 10, 40, 40);
+            gc.drawImage(iconeMaison, x, 10, 32, 32);
+            x += 40;
         }
-        gc.fillText(String.valueOf(adressesAbonnees.size()), largeurEcran - 100, 40);
+
+        // Liste des adresses
+        StringBuilder adresses = new StringBuilder();
+        for (int i = 0; i < adressesAbonnees.size(); i++) {
+            adresses.append(adressesAbonnees.get(i));
+            if (i < adressesAbonnees.size() - 1) {
+                adresses.append(" "); // Espace simple entre les numéros
+            }
+        }
+        gc.fillText(adresses.toString(), x, 33);
     }
 
     // Vérifie les collisions entre journaux et éléments du niveau
