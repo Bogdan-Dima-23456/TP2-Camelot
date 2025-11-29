@@ -186,13 +186,9 @@ public class Partie {
             journal.update(dt);
         }
         
-        // Supprimer journaux hors écran (sauf ceux dans les boîtes aux lettres)
+        // Supprimer journaux hors écran
         for (int i = journaux.size() - 1; i >= 0; i--) {
             Journal journal = journaux.get(i);
-            // Ne pas supprimer les journaux qui sont dans une boîte aux lettres
-            if (journal.estDansBoiteAuxLettres()) {
-                continue;
-            }
             Point2D posEcran = camera.coordoEcran(journal.getPosition());
             if (posEcran.getX() < -100 || posEcran.getX() > largeurEcran + 100 ||
                 posEcran.getY() > hauteurEcran + 100) {
@@ -354,24 +350,24 @@ public class Partie {
         for (int i = journaux.size() - 1; i >= 0; i--) {
             Journal journal = journaux.get(i);
             boolean collisionDetectee = false;
-            boolean collisionBoiteAuxLettres = false;
             
             // Collision avec boîtes aux lettres
             for (Maison maison : maisons) {
                 BoiteAuxLettres boite = maison.getBoiteAuxLettres();
                 if (boite != null && !boite.estTouchee() && journal.verifierCollision(boite)) {
-                    collisionBoiteAuxLettres = true;
+                    collisionDetectee = true;
                     boite.marquerTouchee(); // Marquer la boîte comme touchée
-                    argentTotal += 2; // Toujours donner 2$ quand un journal touche une boîte aux lettres
-                    // Arrêter le mouvement du journal (il reste dans la boîte)
-                    journal.setVelocite(new Point2D(0, 0));
-                    journal.setEstDansBoiteAuxLettres(true); // Marquer le journal comme étant dans la boîte
+                    // Seulement les maisons abonnées donnent de l'argent (+1$)
+                    if (maison.isEstAbonnee()) {
+                        argentTotal += 1;
+                    }
+                    // Les maisons non abonnées ne donnent ni ne prennent d'argent (0$)
                     break;
                 }
             }
             
             // Collision avec fenêtres (seulement si pas de collision avec boîte aux lettres)
-            if (!collisionBoiteAuxLettres) {
+            if (!collisionDetectee) {
                 for (Maison maison : maisons) {
                     for (Fenetre fenetre : maison.getFenetres()) {
                         if (!fenetre.isEstCassee() && journal.verifierCollision(fenetre)) {
@@ -391,7 +387,7 @@ public class Partie {
                 }
             }
             
-            // Supprimer journal seulement après collision avec fenêtre (pas avec boîte aux lettres)
+            // Supprimer journal après collision (boîte aux lettres ou fenêtre)
             if (collisionDetectee) {
                 journaux.remove(i);
             }
