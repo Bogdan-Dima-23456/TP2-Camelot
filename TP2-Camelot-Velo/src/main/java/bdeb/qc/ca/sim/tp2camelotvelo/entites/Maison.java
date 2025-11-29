@@ -55,20 +55,18 @@ public class Maison {
 
         this.boiteAuxLettres = new BoiteAuxLettres(new Point2D(xBoite, yBoite), estAbonnee);
 
-        //Génération des fenetres
+        //Génération des fenetres (0, 1 ou 2 fenêtres)
 
         double yFenetre = 50; //50px en haut de l'ecran
 
-        int nombreFenetre = (int) (Math.random() * 3); //nombre entre 1 et 3
+        int nombreFenetre = (int) (Math.random() * 3); //nombre entre 0 et 2 (0, 1 ou 2)
 
         if(nombreFenetre >= 1){
             fenetres.add(new Fenetre(new Point2D(positionX + 300 ,yFenetre)));
-
         }
 
-        if (nombreFenetre==2) {
+        if (nombreFenetre == 2) {
             fenetres.add(new Fenetre(new Point2D(positionX + 600, yFenetre)));
-
         }
 
 

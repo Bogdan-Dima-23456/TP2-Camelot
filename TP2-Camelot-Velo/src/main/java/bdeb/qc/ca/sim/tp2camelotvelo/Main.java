@@ -59,9 +59,18 @@ public class Main extends Application {
         });
 
         // Configurer la fenêtre
-        stage.setTitle("TP2 Camelot Velo");
+        stage.setTitle("Camelot à vélo");
         stage.setScene(scene);
         stage.setResizable(false);
+        
+        // Ajouter l'icône de la fenêtre
+        try {
+            Image icone = new Image("file:assets/journal.png");
+            stage.getIcons().add(icone);
+        } catch (Exception e) {
+            System.out.println("Impossible de charger l'icône: " + e.getMessage());
+        }
+        
         stage.show();
 
 

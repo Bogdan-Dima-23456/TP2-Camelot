@@ -136,11 +136,14 @@ public class Partie {
         }
         
         // Calculer la fin du niveau (après la dernière maison)
-        this.finNiveauX = 1300 + 12 * espacement; // 1300 + 12 * 1300 = 16900
+        // Dernière maison à x = 1300 + 11 * 1300 = 15600
+        // Fin du niveau = dernière maison + 1.5 * largeur écran
+        double derniereMaisonX = 1300 + 11 * espacement; // 15600
+        this.finNiveauX = derniereMaisonX + 1.5 * largeurEcran; // 15600 + 1350 = 16950
         
-        // Particules niveau 2+ (30/niveau, max 400)
+        // Particules niveau 2+ : N = min((niveau - 1) * 30, 400)
         if (numeroNiveau >= 2) {
-            int nombreParticules = Math.min(30 * numeroNiveau, 400);
+            int nombreParticules = Math.min((numeroNiveau - 1) * 30, 400);
             for (int i = 0; i < nombreParticules; i++) {
                 double x = Math.random() * (finNiveauX + 1000);
                 double y = Math.random() * hauteurEcran;
@@ -213,9 +216,9 @@ public class Partie {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, largeurEcran, hauteurEcran);
         
-        // Si CHARGEMENT: écran chargement avec numéro
+        // Si CHARGEMENT: écran chargement avec numéro (texte vert sur fond noir)
         if (enChargement) {
-            gc.setFill(Color.WHITE);
+            gc.setFill(Color.GREEN);
             gc.setFont(new Font("Arial", 48));
             String texte = "Niveau " + niveauActuel;
             double largeurTexte = gc.getFont().getSize() * texte.length() * 0.6;
@@ -223,17 +226,18 @@ public class Partie {
             return;
         }
         
-        // Si FIN: écran fin avec argent total
+        // Si FIN: écran fin avec argent total (texte rouge et vert)
         if (partieTerminee) {
-            gc.setFill(Color.WHITE);
             gc.setFont(new Font("Arial", 48));
             String texte = "Partie terminée!";
             double largeurTexte = gc.getFont().getSize() * texte.length() * 0.6;
+            gc.setFill(Color.RED);
             gc.fillText(texte, (largeurEcran - largeurTexte) / 2, hauteurEcran / 2 - 50);
             
             gc.setFont(new Font("Arial", 36));
             String texteArgent = "Argent total: $" + argentTotal;
             largeurTexte = gc.getFont().getSize() * texteArgent.length() * 0.6;
+            gc.setFill(Color.GREEN);
             gc.fillText(texteArgent, (largeurEcran - largeurTexte) / 2, hauteurEcran / 2 + 50);
             return;
         }
