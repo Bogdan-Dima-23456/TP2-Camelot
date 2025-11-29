@@ -446,14 +446,22 @@ public class Partie {
 
     // Dessine la visualisation du champ électrique
     private void dessinerVisualisationChamp(GraphicsContext gc) {
-        ParticuleChargee.dessinerVisualisationChamp(
-            particules,
-            finNiveauX + 1000,
-            hauteurEcran,
-            largeurEcran,
-            camera,
-            gc
-        );
+        double largeurNiveau = finNiveauX + 1000;
+
+        for (double x = 0; x < largeurNiveau; x += 50) {
+            for (double y = 0; y < hauteurEcran; y += 50) {
+                Point2D positionMonde = new Point2D(x, y);
+                Point2D positionEcran = camera.coordoEcran(positionMonde);
+
+                // Seulement dessiner si visible à l'écran
+                if (positionEcran.getX() >= 0 && positionEcran.getX() <= largeurEcran &&
+                        positionEcran.getY() >= 0 && positionEcran.getY() <= hauteurEcran) {
+
+                    Point2D champ = champElectrique(positionMonde);
+                    UtilitairesDessins.dessinerVecteurForce(positionEcran, champ, gc);
+                }
+            }
+        }
     }
 
     // Gère les touches de débogage appuyées
