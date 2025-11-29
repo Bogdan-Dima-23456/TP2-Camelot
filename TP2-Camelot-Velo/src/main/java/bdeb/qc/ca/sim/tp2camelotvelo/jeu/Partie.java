@@ -145,7 +145,7 @@ public class Partie {
     }
 
     // Met à jour la logique du jeu
-    public void update(double dt, Set<KeyCode> touchesEnfoncees) {
+    public void update(double dt) {
         // Update temps total
         tempsTotal += dt;
         
