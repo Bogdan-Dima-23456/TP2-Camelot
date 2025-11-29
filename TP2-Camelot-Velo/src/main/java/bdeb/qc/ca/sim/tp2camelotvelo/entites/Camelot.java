@@ -167,8 +167,11 @@ public class Camelot extends ObjetDeJeu {
         double masse = partie.getMasseNiveau();
 
         // Créer et lancer le journal
+        // Les journaux héritent uniquement de la vélocité horizontale du camelot
+        // pour avoir un tracé constant, indépendamment du saut
+        Point2D velociteHorizontale = new Point2D(velocite.getX(), 0);
         Journal journal = new Journal(positionCentre, masse, partie);
-        journal.lancerDepuisCamelot(position, velocite, estZ, estShift);
+        journal.lancerDepuisCamelot(position, velociteHorizontale, estZ, estShift);
 
         // Ajouter le journal à la partie (cela décrémente automatiquement journauxRestants)
         partie.ajouterJournal(journal);
