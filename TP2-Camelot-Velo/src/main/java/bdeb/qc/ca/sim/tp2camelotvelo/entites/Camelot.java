@@ -76,32 +76,28 @@ public class Camelot extends ObjetDeJeu {
 
         }
 
+        // Vérifier si au sol avant d'appliquer la physique
+        double hauteurSol = Main.HAUTEUR;
+        estAuSol = getBas() >= hauteurSol;
+
+        // Gestion du saut (AVANT d'appliquer la physique)
+        if (saut && estAuSol) {
+            velocite = new Point2D(velocite.getX(), -500); // Impulsion vers le haut
+            estAuSol = false; // On décolle
+        }
 
         //logique de la physique
 
         this.acceleration = new Point2D(accX, 1500);
         super.updatePhysique(deltaTemps);
 
-        double hauteurSol = Main.HAUTEUR; // Ou le nom de ta classe principale
-
+        // Vérifier collision avec le sol après la physique
         if (getBas() >= hauteurSol) {
-
             setPosition(new Point2D(position.getX(), hauteurSol - taille.getY()));
-
-
             velocite = new Point2D(velocite.getX(), 0);
-
-
             estAuSol = true;
         } else {
-
             estAuSol = false;
-        }
-
-
-        if (saut && estAuSol) {
-            velocite = new Point2D(velocite.getX(), -500); // Impulsion vers le haut
-            estAuSol = false; // On décolle
         }
         //limit de vitesse
         double nouveauVx = velocite.getX();
