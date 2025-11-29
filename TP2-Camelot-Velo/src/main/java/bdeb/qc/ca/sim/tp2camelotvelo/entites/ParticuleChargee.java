@@ -21,10 +21,9 @@ public class ParticuleChargee extends ObjetDeJeu {
     private Color couleur;
 
     // Constructeur - crée une particule à une position fixe
-    public ParticuleChargee(Point2D position) {
+    public ParticuleChargee(Point2D position) { // Source, AI
         super(position, RAYON * 2, RAYON * 2);
         
-        // couleur random vive (HSB, teinte 0-360)
         double teinte = Math.random() * 360; // Angle entre 0 et 360 degrés
         this.couleur = Color.hsb(teinte, 1.0, 1.0);
     }

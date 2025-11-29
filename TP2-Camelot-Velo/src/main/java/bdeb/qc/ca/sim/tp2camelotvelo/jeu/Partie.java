@@ -486,14 +486,16 @@ public class Partie {
     // Crée des particules de test pour le débogage
     private void creerParticulesTest() {
         particules.clear();
-        
-        // Ligne haut (y=10)
-        for (double x = 0; x < largeurEcran * 2; x += 100) {
+
+        double largeurNiveau = finNiveauX + 1000;
+
+        // Ligne du haut (y = 10px)
+        for (double x = 0; x < largeurNiveau; x += 50) {
             particules.add(new ParticuleChargee(new Point2D(x, 10)));
         }
-        
-        // Ligne bas (y=hauteur-10)
-        for (double x = 0; x < largeurEcran * 2; x += 100) {
+
+        // Ligne du bas (y = hauteurEcran - 10px)
+        for (double x = 0; x < largeurNiveau; x += 50) {
             particules.add(new ParticuleChargee(new Point2D(x, hauteurEcran - 10)));
         }
     }
