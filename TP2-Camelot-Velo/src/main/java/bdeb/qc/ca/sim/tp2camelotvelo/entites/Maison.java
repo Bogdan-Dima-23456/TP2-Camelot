@@ -1,5 +1,6 @@
 package bdeb.qc.ca.sim.tp2camelotvelo.entites;
 
+import bdeb.qc.ca.sim.tp2camelotvelo.Main;
 import bdeb.qc.ca.sim.tp2camelotvelo.jeu.Camera;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -74,14 +75,14 @@ public class Maison {
 
     public void draw(GraphicsContext context, Camera camera) {
         //Position de la porte
-            double hauteurPorte = 200;
-            Point2D posPorteMonde = new Point2D(positionX, 580 - hauteurPorte);
+        double hauteurPorte = 200;
+
+            Point2D posPorteMonde = new Point2D(positionX, Main.HAUTEUR - hauteurPorte);
             Point2D posPorteEcran = camera.coordoEcran(posPorteMonde);
 
 
         //Dessin porte
-        context.setFill(Color.SADDLEBROWN);
-        context.fillRect(posPorteEcran.getX(), posPorteEcran.getY(), 100, hauteurPorte);
+       context.drawImage(imagePote, posPorteEcran.getX(), posPorteEcran.getY() );
 
         //Dessin adresses
         context.setFill(Color.GOLD);

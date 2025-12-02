@@ -19,7 +19,6 @@ public class Camelot extends ObjetDeJeu {
     private double tempsTotal = 0;
     private double tempEcouleLance = 0;
     private boolean estAuSol;
-    private final ArrayList<Journal> journauxLances = new ArrayList<>();
     private int journauxRestants = 0; // Nombre de journaux restants dans l'inventaire
     private Partie partie;
 
@@ -113,20 +112,16 @@ public class Camelot extends ObjetDeJeu {
 
         // Gestion du lancer de journal
         boolean estShift = Input.isKeyPressed(KeyCode.SHIFT);
-        Journal journalLance = null;
 
-        if (Input.isKeyPressed(KeyCode.Z)) {
+
+        if (Input.isKeyPressed(KeyCode.X)) {
             // Lancer vers le haut
-            journalLance = lancerJournal(true, estShift);
-        } else if (Input.isKeyPressed(KeyCode.X)) {
+            lancerJournal(true, estShift);
+        } else if (Input.isKeyPressed(KeyCode.Z)) {
             // Lancer vers l'avant
-            journalLance = lancerJournal(false, estShift);
+           lancerJournal(false, estShift);
         }
 
-        // Si un journal a été lancé, l'ajouter à la liste
-        if (journalLance != null) {
-            journauxLances.add(journalLance);
-        }
     }
 
 
@@ -138,11 +133,6 @@ public class Camelot extends ObjetDeJeu {
 
     public int getJournauxRestants() {
         return journauxRestants;
-    }
-
-
-    public ArrayList<Journal> getJournauxLances() {
-        return journauxLances;
     }
 
 

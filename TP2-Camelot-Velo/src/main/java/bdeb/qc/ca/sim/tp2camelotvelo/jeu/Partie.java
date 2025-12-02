@@ -15,8 +15,7 @@ import java.util.List;
 public class Partie {
     // Constantes du jeu
     private static final int HAUTEUR_SOL = 580; // Position Y du sol
-    public static final double GRAVITE = 1500.0; // Accélération de la gravité en px/s²
-    // Supprimer: private static final double TAILLE_BRIQUE = 64.0; // Taille d'une brique en pixels
+
 
     // Dimensions de l'écran
     private final double largeurEcran;
@@ -221,24 +220,22 @@ public class Partie {
             gc.setFill(Color.GREEN);
             gc.setFont(new Font("Arial", 48));
             String texte = "Niveau " + niveauActuel;
-            double largeurTexte = gc.getFont().getSize() * texte.length() * 0.6;
-            gc.fillText(texte, (largeurEcran - largeurTexte) / 2, hauteurEcran / 2);
+
+            gc.fillText(texte, largeurEcran  / 2 - 120, hauteurEcran / 2);
             return;
         }
         
         // Si FIN: écran fin avec argent total (texte rouge et vert)
         if (partieTerminee) {
             gc.setFont(new Font("Arial", 48));
-            String texte = "Partie terminée!";
-            double largeurTexte = gc.getFont().getSize() * texte.length() * 0.6;
+            String texte = "Rupture de stock!";
             gc.setFill(Color.RED);
-            gc.fillText(texte, (largeurEcran - largeurTexte) / 2, hauteurEcran / 2 - 50);
+            gc.fillText(texte, largeurEcran  / 2 -180 , hauteurEcran / 2 - 30);
             
             gc.setFont(new Font("Arial", 36));
             String texteArgent = "Argent total: $" + argentTotal;
-            largeurTexte = gc.getFont().getSize() * texteArgent.length() * 0.6;
             gc.setFill(Color.GREEN);
-            gc.fillText(texteArgent, (largeurEcran - largeurTexte) / 2, hauteurEcran / 2 + 50);
+            gc.fillText(texteArgent, largeurEcran  / 2 -120, hauteurEcran / 2 + 30);
             return;
         }
         
@@ -299,7 +296,7 @@ public class Partie {
 
     // Dessine le HUD (interface utilisateur)
     private void dessinerHUD(GraphicsContext gc) {
-        // Fond semi-transparent noir (plus joli que le noir pur)
+        // Fond semi-transparent noir
         gc.setFill(Color.rgb(0, 0, 0, 0.8));
         gc.fillRect(0, 0, largeurEcran, 50); // Un peu plus haut (50px) pour les icônes
 
@@ -355,7 +352,7 @@ public class Partie {
             Journal journal = journaux.get(i);
             boolean collisionDetectee = false;
             
-            // Collision avec boîtes aux lettres
+            // Collision avec boîtes aux lettres1
             for (Maison maison : maisons) {
                 BoiteAuxLettres boite = maison.getBoiteAuxLettres();
                 if (boite != null && !boite.estTouchee() && journal.verifierCollision(boite)) {
@@ -422,14 +419,14 @@ public class Partie {
         gc.strokeLine(largeurEcran * 0.20, 0, largeurEcran * 0.20, hauteurEcran);
         
         // Rectangles collision journaux
-        gc.setStroke(Color.BLUE);
+        gc.setStroke(Color.YELLOW);
         for (Journal journal : journaux) {
             Point2D posEcran = camera.coordoEcran(journal.getPosition());
             gc.strokeRect(posEcran.getX(), posEcran.getY(), journal.getLargeur(), journal.getHauteur());
         }
         
         // Rectangles collision boîtes
-        gc.setStroke(Color.GREEN);
+        gc.setStroke(Color.YELLOW);
         for (Maison maison : maisons) {
             BoiteAuxLettres boite = maison.getBoiteAuxLettres();
             if (boite != null) {
@@ -439,7 +436,7 @@ public class Partie {
         }
         
         // Rectangles collision fenêtres
-        gc.setStroke(Color.RED);
+        gc.setStroke(Color.YELLOW);
         for (Maison maison : maisons) {
             for (Fenetre fenetre : maison.getFenetres()) {
                 Point2D posEcran = camera.coordoEcran(fenetre.getPosition());
